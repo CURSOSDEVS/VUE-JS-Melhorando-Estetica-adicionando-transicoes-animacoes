@@ -33,7 +33,20 @@
 		<hr>
 		<b-button @click="exibir2 = !exibir2" variant="primary">Exibir Transicao</b-button>
 		
-		<transition :name="tipoAnimacao"
+		<!-- <transition :name="tipoAnimacao"
+			@before-enter='beforeEnter'
+			@enter='enter'
+			@after-enter='afterEnter'
+			@enter-cancelled='enterCancelled'
+
+			@before-leave='beforeLeave'
+			@leave='leave'
+			@after-leave='afterLeave'
+			@leave-cancelled='leaveCancelled'	>
+			<div v-if="exibir2" class="caixa"></div>
+		</transition> -->
+
+		<transition :css="false"
 			@before-enter='beforeEnter'
 			@enter='enter'
 			@after-enter='afterEnter'
@@ -46,6 +59,7 @@
 			<div v-if="exibir2" class="caixa"></div>
 		</transition>
 
+
 	</div>
 
 </template>
@@ -57,37 +71,51 @@ export default {
 		return {
 			msg: 'Uma mensagem de informação para o usuário!',
 			exibir: false,
-			exibir2: false,
-			tipoAnimacao: 'slide'
+			exibir2: true,
+			tipoAnimacao: 'slide',
+			larguraBase: 0
 		}
 	},
 	methods: {
+		animar(el, done, negativo){
+			let rodada = 1			
+			const temporizador = setInterval(() => {
+				const novaLargura = this.larguraBase + 
+					(negativo ? -rodada * 10 : rodada * 10)
+				el.style.width = `${novaLargura}px`
+				rodada++
+				if(rodada > 30) {
+					clearInterval(temporizador)
+					done()
+				}
+			}, 20);
+		},
 		beforeEnter(el){
-			console.log('beforeEnter')
+			this.larguraBase = 0
+			el.style.width = `${this.larguraBase}px`
 		},
 		enter(el, done){
-			console.log('enter')
-			done()
+			this.animar(el, done, false)
 		},
-		afterEnter(el){
-			console.log('afterEnter')
-		},
-		enterCancelled(){
-			console.log('enterCancelled')
-		},
+		// afterEnter(el){
+		// 	console.log('afterEnter')
+		// },
+		// enterCancelled(){
+		// 	console.log('enterCancelled')
+		// },
 		beforeLeave(el){
-			console.log('beforeLeave')
+			this.larguraBase = 300
+			el.style.width = `${this.larguraBase}px`
 		},
 		leave(el, done){
-			console.log('Leave')
-			done()
+			this.animar(el, done, true)
 		},
-		afterLeave(el){
-			console.log('afterLeave')
-		},
-		leaveCancelled(){
-			console.log('LeaveCancelled')
-		}
+		// afterLeave(el){
+		// 	console.log('afterLeave')
+		// },
+		// leaveCancelled(){
+		// 	console.log('LeaveCancelled')
+		// }
 	},
 }
 </script>
