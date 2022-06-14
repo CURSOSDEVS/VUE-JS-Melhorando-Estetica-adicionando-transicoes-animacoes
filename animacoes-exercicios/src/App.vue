@@ -30,9 +30,9 @@
 			<b-alert variant="warning" show v-else key="warning">{{msg}}</b-alert>
 		</transition> -->
 
-		<hr>
+		<!-- <hr>
 		<b-button @click="exibir2 = !exibir2" variant="primary">Exibir Transicao</b-button>
-		
+		 -->
 		<!-- <transition :name="tipoAnimacao"
 			@before-enter='beforeEnter'
 			@enter='enter'
@@ -45,7 +45,7 @@
 			@leave-cancelled='leaveCancelled'	>
 			<div v-if="exibir2" class="caixa"></div>
 		</transition> -->
-
+<!-- 
 		<transition :css="false"
 			@before-enter='beforeEnter'
 			@enter='enter'
@@ -69,9 +69,14 @@
 		
 		<transition name="fade" mode="out-in">
 			<component :is="componenteSelecionado"></component>
-		</transition>
+		</transition> -->
+		<b-button @click="adicionarAluno" class="mb-4">Adicionar Aluno</b-button>
+		<hr>
+		<b-list-group v-for="(aluno, i) in alunos" :key="aluno">
+			<b-list-group-item 
+				 @click="removerAluno(i)">{{aluno}}</b-list-group-item>
+		</b-list-group>
 		
-
 	</div>
 
 </template>
@@ -84,6 +89,7 @@
 		components:{AlertaAdvertencia, AlertaInfo},
 		data() {
 			return {
+				alunos: ['Roberto', 'Julia', 'Teresa', 'Paulo'],
 				msg: 'Uma mensagem de informação para o usuário!',
 				exibir: false,
 				exibir2: true,
@@ -93,6 +99,13 @@
 			}
 		},
 		methods: {
+			adicionarAluno(){
+				const s = Math.random().toString(36).substring(2)
+				this.alunos.push(s)
+			},
+			removerAluno(indice){
+				this.alunos.splice(indice, 1)
+			},
 			animar(el, done, negativo){
 				let rodada = 1			
 				const temporizador = setInterval(() => {
